@@ -1,0 +1,77 @@
+services:
+  api:
+    container_name: go-grafana-prometheus
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: go-grafana-prometheus:latest
+    env_file:
+      - .env
+    volumes:
+      - ./.env:/app/.env
+      - ./logs:/app/logs
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      - go-grafana-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    develop:
+      watch:
+        - path: .
+          action: rebuild
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.55.0
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9091:9090
+    networks:
+      - go-grafana-network
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:11.3.0
+    volumes:
+      - ./config/grafana.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - go-grafana-network
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.9.3
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - go-grafana-network
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.9.3
+    volumes:
+      - ./config/promtail.yml:/etc/promtail/config.yml
+      - ./logs:/app/logs
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - go-grafana-network
+
+volumes:
+  grafana-data:
+
+networks:
+  go-grafana-network:
+    driver: bridge
