@@ -1,6 +1,6 @@
 # Go Grafana Logs & Metrics
 
-This project provides a comprehensive observability solution for standalone Go applications. It implements a centralized telemetry pipeline to manage logs and metrics using the Promtail, Loki, Prometheus, and Grafana stack.
+This project provides a comprehensive observability solution for **Go applications**. It implements a centralized telemetry pipeline to manage logs and metrics using the **Promtail**, **Loki**, **Prometheus**, and **Grafana stack**.
 
 ## 🌟 Key Features
 
