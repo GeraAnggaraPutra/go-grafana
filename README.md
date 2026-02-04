@@ -35,10 +35,10 @@ This project provides a comprehensive observability solution for **Go applicatio
   * Prometheus: http://localhost:9090
 
 ## ⚙️ How It Works
-1. Go Application: Generates events and writes them in JSON format to the /app/logs directory.
+1. **Go Application**: Generates events and writes them in JSON format to the /app/logs directory.
 
-2. Promtail: Mounts the same directory, monitors for new entries (tailing), and ships them to Loki.
+2. **Promtail**: Mounts the same directory, monitors for new entries (tailing), and ships them to Loki.
 
-3. Prometheus: Scrapes numerical data from the application's /metrics endpoint.
+3. **Prometheus**: Scrapes numerical data from the application's /metrics endpoint.
 
-4. Grafana: Aggregates data from both Loki (Logs) and Prometheus (Metrics) to provide actionable insights via graphs and tables.
+4. **Grafana**: Aggregates data from both **Loki** (Logs) and **Prometheus** (Metrics) to provide actionable insights via graphs and tables.
